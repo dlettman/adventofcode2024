@@ -21,11 +21,9 @@ def make_lists(puzzle_input):
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     l1, l2 = make_lists(puzzle_input)
-    total = 0
     l1.sort()
     l2.sort()
-    for zipped in zip(l1, l2):
-        total += (max(zipped[0], zipped[1]) - min(zipped[0], zipped[1]))
+    total = sum([(max(zipped[0], zipped[1]) - min(zipped[0], zipped[1])) for zipped in zip(l2, l2)])
     return total
 
 
