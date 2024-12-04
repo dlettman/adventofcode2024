@@ -6,7 +6,7 @@ import pyperclip
 
 from helpers import helpers
 
-PATTERN = '([0-9]+) +([0-9]+)'
+PATTERN = "([0-9]+) +([0-9]+)"
 
 
 def make_lists(puzzle_input):
@@ -23,7 +23,12 @@ def part_one(input_filename):
     l1, l2 = make_lists(puzzle_input)
     l1.sort()
     l2.sort()
-    total = sum([(max(zipped[0], zipped[1]) - min(zipped[0], zipped[1])) for zipped in zip(l2, l2)])
+    total = sum(
+        [
+            (max(zipped[0], zipped[1]) - min(zipped[0], zipped[1]))
+            for zipped in zip(l2, l2)
+        ]
+    )
     return total
 
 

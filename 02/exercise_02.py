@@ -20,7 +20,7 @@ def is_ok(line, mini=False):
     if not mini and not safe:
         sub_seqs = []
         for n in range(1, len(line) + 1):
-            sub_seqs.append(line[0:n - 1] + line[n:len(line)])
+            sub_seqs.append(line[0 : n - 1] + line[n : len(line)])
         return any([is_ok(sub_seq, mini=True) for sub_seq in sub_seqs])
     return safe
 

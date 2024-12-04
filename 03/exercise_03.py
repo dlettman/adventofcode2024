@@ -24,9 +24,9 @@ def remove_dont_stuff(line, enabled=True):
     output = ""
     for idx in range(len(line)):
         try:
-            if enabled and line[idx:idx+7] == "don't()":
+            if enabled and line[idx : idx + 7] == "don't()":
                 enabled = False
-            elif not enabled and line[idx:idx+4] == "do()":
+            elif not enabled and line[idx : idx + 4] == "do()":
                 enabled = True
         except IndexError:
             pass
