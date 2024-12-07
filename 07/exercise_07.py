@@ -5,18 +5,52 @@ import pyperclip
 from helpers import helpers
 
 
+def get_targets_and_terms(puzzle_input):
+    targets, terms = [], []
+    for line in puzzle_input:
+        target, terms_chunk = line.split(":")
+        terms_chunks = terms_chunk.split()
+        targets.append(target)
+        terms.append(terms_chunks)
+        return targets, terms
+
+one_operators = ["+", "*"]
+
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
-    # do stuff here
-    output = None
-    return output
+    targets, terms = get_targets_and_terms(puzzle_input)
+    total = 0
+    for target, term in zip(targets, terms):
+        combinations = [term]
+        new_combinations = []
+        for sub_term in terms:
+            for combination in combinations:
+                new_combinations.append(combination + "+" + sub_term)
+                new_combinations.append(combination + "*" + sub_term)
+            combinations = new_combinations
+        for combination in combinations:
+            if eval(combination) == target:
+                total += target
+    return total
 
 
-def part_two(input_filename):
+def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
-    # do stuff here
-    output = None
-    return output
+    targets, terms = get_targets_and_terms(puzzle_input)
+    total = 0
+    for target, term in zip(targets, terms):
+        combinations = [term]
+        new_combinations = []
+        for sub_term in terms:
+            for combination in combinations:
+                new_combinations.append(combination + "+" + sub_term)
+                new_combinations.append(combination + "*" + sub_term)
+                new_combinations.append(combination + sub_term)
+            combinations = new_combinations
+        for combination in combinations:
+            if eval(combination) == target:
+                total += target
+    return total
 
 
 if __name__ == "__main__":
