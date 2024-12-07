@@ -2,7 +2,7 @@ import time
 
 import pyperclip
 
-from helpers import helpers
+import helpers
 
 
 def get_targets_and_terms(puzzle_input):
@@ -10,46 +10,60 @@ def get_targets_and_terms(puzzle_input):
     for line in puzzle_input:
         target, terms_chunk = line.split(":")
         terms_chunks = terms_chunk.split()
-        targets.append(target)
-        terms.append(terms_chunks)
-        return targets, terms
-
-one_operators = ["+", "*"]
+        targets.append(int(target))
+        terms.append([int(item) for item in terms_chunks])
+    return targets, terms
 
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
-    targets, terms = get_targets_and_terms(puzzle_input)
+    targets, list_of_terms = get_targets_and_terms(puzzle_input)
     total = 0
-    for target, term in zip(targets, terms):
-        combinations = [term]
-        new_combinations = []
-        for sub_term in terms:
+    # print(targets, terms)
+
+    for target, terms in zip(targets, list_of_terms):
+        combinations = [terms[0]]
+        for term in terms[1:]:
+            new_combinations = []
             for combination in combinations:
-                new_combinations.append(combination + "+" + sub_term)
-                new_combinations.append(combination + "*" + sub_term)
-            combinations = new_combinations
+                new_comb = combination + term
+                if new_comb <= target:
+                    new_combinations.append(new_comb)
+                new_comb = combination * term
+                if new_comb <= target:
+                    new_combinations.append(new_comb)
+            combinations = new_combinations.copy()
         for combination in combinations:
-            if eval(combination) == target:
+            if combination == target:
                 total += target
+                break
     return total
 
 
-def part_one(input_filename):
+def part_two(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
-    targets, terms = get_targets_and_terms(puzzle_input)
+    targets, list_of_terms = get_targets_and_terms(puzzle_input)
     total = 0
-    for target, term in zip(targets, terms):
-        combinations = [term]
-        new_combinations = []
-        for sub_term in terms:
+    print(targets, terms)
+
+    for target, terms in zip(targets, list_of_terms):
+        combinations = [terms[0]]
+        for term in terms[1:]:
+            new_combinations = []
             for combination in combinations:
-                new_combinations.append(combination + "+" + sub_term)
-                new_combinations.append(combination + "*" + sub_term)
-                new_combinations.append(combination + sub_term)
-            combinations = new_combinations
+                new_comb = combination + term
+                if new_comb <= target:
+                    new_combinations.append(new_comb)
+                new_comb = combination * term
+                if new_comb <= target:
+                    new_combinations.append(new_comb)
+                new_comb = int(str(combination) + str(term))
+                if new_comb <= target:
+                    new_combinations.append(new_comb)
+            combinations = new_combinations.copy()
         for combination in combinations:
-            if eval(combination) == target:
+            if combination == target:
                 total += target
+                break
     return total
 
 
