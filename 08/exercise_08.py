@@ -4,6 +4,8 @@ import pyperclip
 
 import helpers
 
+from itertools import combinations
+
 
 def parse_map(puzzle_input):
     antennas = {}
@@ -34,43 +36,37 @@ def part_one(input_filename):
     for locations in antennas.values():
         for location in locations:
             all_antennas.add(location)
-    for char in antennas:
-        for antenna in antennas[char]:
-            for other_antenna in antennas[char]:
-                if not antenna == other_antenna:
-                    dist = (antenna[0] - other_antenna[0], antenna[1] - other_antenna[1])
-                    for ant in [antenna, other_antenna]:
-                        loc = (ant[0] + dist[0], ant[1] + dist[1])
-                        if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                            if loc not in antennas[char]:
-                                antinodes.add(loc)
-                        loc = (ant[0] - dist[0], ant[1] - dist[1])
-                        if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                            if loc not in antennas[char]:
-                                antinodes.add(loc)
-    return len(antinodes)
+    for char, char_antennas in antennas.items():
+        for antenna, other_antenna in combinations(char_antennas, 2):
+            dist = (antenna[0] - other_antenna[0], antenna[1] - other_antenna[1])
+            for ant in [antenna, other_antenna]:
+                loc = (ant[0] + dist[0], ant[1] + dist[1])
+                if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
+                    antinodes.add(loc)
+                loc = (ant[0] - dist[0], ant[1] - dist[1])
+                if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
+                    antinodes.add(loc)
+    return len(antinodes - all_antennas)
 
 
 def part_two(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     antinodes = set()
     antennas = parse_map(puzzle_input)
-    for char in antennas:
-        for antenna in antennas[char]:
-            for other_antenna in antennas[char]:
-                if not antenna == other_antenna:
-                    dist = (antenna[0] - other_antenna[0], antenna[1] - other_antenna[1])
-                    for ant in [antenna, other_antenna]:
-                        loc = (ant[0] + dist[0], ant[1] + dist[1])
-                        # if becomes while loop...
-                        while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                            antinodes.add(loc)
-                            loc = (loc[0] - dist[0], loc[1] - dist[1])
-                        loc = (ant[0] + dist[0], ant[1] + dist[1])
-                        # and again...
-                        while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                            antinodes.add(loc)
-                            loc = (loc[0] + dist[0], loc[1] + dist[1])
+    for char, char_antennas in antennas.items():
+        for antenna, other_antenna in combinations(char_antennas, 2):
+            dist = (antenna[0] - other_antenna[0], antenna[1] - other_antenna[1])
+            for ant in [antenna, other_antenna]:
+                loc = antenna
+                # if becomes while loop...
+                while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
+                    antinodes.add(loc)
+                    loc = (loc[0] - dist[0], loc[1] - dist[1])
+                loc = antenna
+                # and again...
+                while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
+                    antinodes.add(loc)
+                    loc = (loc[0] + dist[0], loc[1] + dist[1])
     return len(antinodes)
 
 
