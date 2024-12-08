@@ -42,7 +42,6 @@ def part_one(input_filename):
                     for ant in [antenna, other_antenna]:
                         loc = (ant[0] + dist[0], ant[1] + dist[1])
                         if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                            print(antenna, " + ", other_antenna, " = ", loc)
                             if loc not in antennas[char]:
                                 antinodes.add(loc)
                         loc = (ant[0] - dist[0], ant[1] - dist[1])
@@ -65,16 +64,14 @@ def part_two(input_filename):
                         loc = (ant[0] + dist[0], ant[1] + dist[1])
                         # if becomes while loop...
                         while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                            if loc not in antennas[char]:
-                                antinodes.add(loc)
+                            antinodes.add(loc)
                             loc = (loc[0] - dist[0], loc[1] - dist[1])
                         loc = (ant[0] + dist[0], ant[1] + dist[1])
                         # and again...
                         while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                            if loc not in antennas[char]:
-                                antinodes.add(loc)
+                            antinodes.add(loc)
                             loc = (loc[0] + dist[0], loc[1] + dist[1])
-    return len(antinodes.union(all_antennas))
+    return len(antinodes)
 
 
 if __name__ == "__main__":
