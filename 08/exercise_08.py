@@ -41,12 +41,14 @@ def part_one(input_filename):
             dist = (antenna[0] - other_antenna[0], antenna[1] - other_antenna[1])
             for ant in [antenna, other_antenna]:
                 loc = (ant[0] + dist[0], ant[1] + dist[1])
-                if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                    antinodes.add(loc)
+                if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1)):
+                    if loc not in antennas[char]:
+                        antinodes.add(loc)
                 loc = (ant[0] - dist[0], ant[1] - dist[1])
                 if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                    antinodes.add(loc)
-    return len(antinodes - all_antennas)
+                    if loc not in antennas[char]:
+                        antinodes.add(loc)
+    return len(antinodes)
 
 
 def part_two(input_filename):
