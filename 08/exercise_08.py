@@ -1,10 +1,8 @@
 import time
-
 import pyperclip
+from itertools import combinations
 
 import helpers
-
-from itertools import combinations
 
 
 def parse_map(puzzle_input):
@@ -18,6 +16,7 @@ def parse_map(puzzle_input):
                     antennas[char] = {(x, y)}
     return antennas
 
+
 def print_the_thing(antinodes, puzzle_input):
     for y in range(len(puzzle_input)):
         line = ""
@@ -28,26 +27,20 @@ def print_the_thing(antinodes, puzzle_input):
                 line += "."
         print(line)
 
+
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     antinodes = set()
     antennas = parse_map(puzzle_input)
-    all_antennas = set()
-    for locations in antennas.values():
-        for location in locations:
-            all_antennas.add(location)
     for char, char_antennas in antennas.items():
         for antenna, other_antenna in combinations(char_antennas, 2):
             dist = (antenna[0] - other_antenna[0], antenna[1] - other_antenna[1])
-            for ant in [antenna, other_antenna]:
-                loc = (ant[0] + dist[0], ant[1] + dist[1])
-                if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1)):
-                    if loc not in antennas[char]:
-                        antinodes.add(loc)
-                loc = (ant[0] - dist[0], ant[1] - dist[1])
-                if (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                    if loc not in antennas[char]:
-                        antinodes.add(loc)
+            loc = (antenna[0] + dist[0], antenna[1] + dist[1])
+            if not helpers.out_of_bounds(loc, puzzle_input):
+                antinodes.add(loc)
+            loc = (other_antenna[0] - dist[0], other_antenna[1] - dist[1])
+            if not helpers.out_of_bounds(loc, puzzle_input):
+                antinodes.add(loc)
     return len(antinodes)
 
 
@@ -58,17 +51,14 @@ def part_two(input_filename):
     for char, char_antennas in antennas.items():
         for antenna, other_antenna in combinations(char_antennas, 2):
             dist = (antenna[0] - other_antenna[0], antenna[1] - other_antenna[1])
-            for ant in [antenna, other_antenna]:
-                loc = antenna
-                # if becomes while loop...
-                while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                    antinodes.add(loc)
-                    loc = (loc[0] - dist[0], loc[1] - dist[1])
-                loc = antenna
-                # and again...
-                while (0 <= loc[0] <= len(puzzle_input[0]) -1 and (0 <= loc[1] <= len(puzzle_input) -1 )):
-                    antinodes.add(loc)
-                    loc = (loc[0] + dist[0], loc[1] + dist[1])
+            loc = antenna
+            while not helpers.out_of_bounds(loc, puzzle_input):
+                antinodes.add(loc)
+                loc = (loc[0] + dist[0], loc[1] + dist[1])
+            loc = other_antenna
+            while not helpers.out_of_bounds(loc, puzzle_input):
+                antinodes.add(loc)
+                loc = (loc[0] - dist[0], loc[1] - dist[1])
     return len(antinodes)
 
 
