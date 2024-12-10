@@ -4,19 +4,51 @@ import pyperclip
 
 from helpers import helpers
 
+from collections import deque
+
+
+def convert_to_list_of_ints(pi):
+    return [[int(char) for char in line] for line in pi]
+
 
 def part_one(input_filename):
-    puzzle_input = helpers.parse_input(input_filename)
-    # do stuff here
-    output = None
-    return output
+    grid = convert_to_list_of_ints(helpers.parse_input(input_filename))
+    total = 0
+    for y, line in enumerate(grid):
+        for x, char in enumerate(line):
+            if not char == 0:
+                continue
+            peaks = set()
+            steps = deque([(x + n[0], y + n[1], 1) for n in helpers.NEIGHBORS_ORTH])
+            while steps:
+                step = steps.popleft()
+                if not helpers.out_of_bounds((step[0], step[1]), grid) and grid[step[1]][step[0]] == step[2]:
+                    if step[2] == 9:
+                        peaks.add((step[0], step[1]))
+                        continue
+                    steps += ([(step[0] + n[0], step[1] + n[1], step[2] + 1) for n in helpers.NEIGHBORS_ORTH])
+            total += len(peaks)
+    return total
 
 
 def part_two(input_filename):
-    puzzle_input = helpers.parse_input(input_filename)
-    # do stuff here
-    output = None
-    return output
+    grid = convert_to_list_of_ints(helpers.parse_input(input_filename))
+    big_tot = 0
+    for y, line in enumerate(grid):
+        for x, char in enumerate(line):
+            if not char == 0:
+                continue
+            subtotal = 0
+            steps = deque([(x + n[0], y + n[1], 1) for n in helpers.NEIGHBORS_ORTH])
+            while steps:
+                step = steps.popleft()
+                if not helpers.out_of_bounds((step[0], step[1]), grid) and grid[step[1]][step[0]] == step[2]:
+                    if step[2] == 9:
+                        subtotal += 1
+                        continue
+                    steps += ([(step[0] + n[0], step[1] + n[1], step[2] + 1) for n in helpers.NEIGHBORS_ORTH])
+            big_tot += subtotal
+    return big_tot
 
 
 if __name__ == "__main__":
