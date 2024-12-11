@@ -4,19 +4,36 @@ import pyperclip
 
 from helpers import helpers
 
+from collections import Counter
 
-def part_one(input_filename):
+
+def stone_them_to_death(puzzle_input, blinks):
+    stones = Counter(puzzle_input[0].split())
+    for n in range(blinks):
+        new_stones = Counter()
+        for stone, count in stones.items():
+            if stone == "0":
+                new_stones["1"] += count
+            elif len(str(stone)) % 2 == 0:
+                stone_a = stone[0:len(stone)//2]
+                stone_b = stone[len(stone)//2:]
+                for sub_stone in [stone_a, stone_b]:
+                    new_stones[str(int(sub_stone))] += count
+            else:
+                new_stones[str(int(stone) * 2024)] += count
+        stones = new_stones
+    return sum([int(item) for item in stones.values()])
+
+
+def part_one(input_filename, blinks=75):
     puzzle_input = helpers.parse_input(input_filename)
-    # do stuff here
-    output = None
-    return output
+    return stone_them_to_death(puzzle_input, blinks=25)
 
 
 def part_two(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
-    # do stuff here
-    output = None
-    return output
+    return stone_them_to_death(puzzle_input, blinks=75)
+
 
 
 if __name__ == "__main__":
