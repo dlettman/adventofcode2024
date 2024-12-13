@@ -20,7 +20,7 @@ def get_rules_and_updates(puzzle_input):
             else:
                 must_be_before[a].add(b)
         elif updating:
-            updates.append(line.split(','))
+            updates.append(line.split(","))
     return must_be_before, updates
 
 
@@ -33,10 +33,17 @@ def needs_sorting(line, must_be_before):
         seen.add(num)
     return False
 
+
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     must_be_before, updates = get_rules_and_updates(puzzle_input)
-    return sum([int(line[len(line)//2]) for line in updates if not needs_sorting(line, must_be_before)])
+    return sum(
+        [
+            int(line[len(line) // 2])
+            for line in updates
+            if not needs_sorting(line, must_be_before)
+        ]
+    )
 
 
 def stupid_sort(nums, must_be_before):
@@ -54,7 +61,13 @@ def stupid_sort(nums, must_be_before):
 def part_two(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     must_be_before, updates = get_rules_and_updates(puzzle_input)
-    return sum([int(stupid_sort(line, must_be_before)[len(line)//2]) for line in updates if needs_sorting(line, must_be_before)])
+    return sum(
+        [
+            int(stupid_sort(line, must_be_before)[len(line) // 2])
+            for line in updates
+            if needs_sorting(line, must_be_before)
+        ]
+    )
 
 
 if __name__ == "__main__":

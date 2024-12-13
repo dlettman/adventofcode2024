@@ -15,8 +15,8 @@ def stone_them_to_death(puzzle_input, blinks):
             if stone == "0":
                 new_stones["1"] += count
             elif len(str(stone)) % 2 == 0:
-                stone_a = stone[0:len(stone)//2]
-                stone_b = stone[len(stone)//2:]
+                stone_a = stone[0 : len(stone) // 2]
+                stone_b = stone[len(stone) // 2 :]
                 for sub_stone in [stone_a, stone_b]:
                     new_stones[str(int(sub_stone))] += count
             else:
@@ -33,7 +33,6 @@ def part_one(input_filename, blinks=75):
 def part_two(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     return stone_them_to_death(puzzle_input, blinks=75)
-
 
 
 if __name__ == "__main__":

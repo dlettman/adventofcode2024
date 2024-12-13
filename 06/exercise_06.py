@@ -6,6 +6,7 @@ from helpers import helpers
 
 DIRS = [(0, -1), (1, 0), (0, 1), (-1, 0)]
 
+
 def parse_map(puzzle_input):
     grid = set()
     start = None
@@ -41,7 +42,9 @@ def does_the_little_man_escape(grid, start, width, height):
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     grid, start = parse_map(puzzle_input)
-    return does_the_little_man_escape(grid, start, len(puzzle_input[0]), len(puzzle_input))[1]
+    return does_the_little_man_escape(
+        grid, start, len(puzzle_input[0]), len(puzzle_input)
+    )[1]
 
 
 def part_two(input_filename):
@@ -53,7 +56,9 @@ def part_two(input_filename):
             if (x, y) not in grid:
                 new_grid = grid.copy()
                 new_grid.add((x, y))
-                if not does_the_little_man_escape(new_grid, start, len(puzzle_input[0]), len(puzzle_input[1]))[0]:
+                if not does_the_little_man_escape(
+                    new_grid, start, len(puzzle_input[0]), len(puzzle_input[1])
+                )[0]:
                     total += 1
     return total
 

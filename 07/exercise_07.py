@@ -14,6 +14,7 @@ def get_targets_and_terms(puzzle_input):
         terms.append([int(item) for item in terms_chunks])
     return targets, terms
 
+
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     targets, list_of_terms = get_targets_and_terms(puzzle_input)

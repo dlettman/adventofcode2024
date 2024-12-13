@@ -22,11 +22,17 @@ def part_one(input_filename):
             steps = deque([(x + n[0], y + n[1], 1) for n in helpers.NEIGHBORS_ORTH])
             while steps:
                 step = steps.popleft()
-                if not helpers.out_of_bounds((step[0], step[1]), grid) and grid[step[1]][step[0]] == step[2]:
+                if (
+                    not helpers.out_of_bounds((step[0], step[1]), grid)
+                    and grid[step[1]][step[0]] == step[2]
+                ):
                     if step[2] == 9:
                         peaks.add((step[0], step[1]))
                         continue
-                    steps += ([(step[0] + n[0], step[1] + n[1], step[2] + 1) for n in helpers.NEIGHBORS_ORTH])
+                    steps += [
+                        (step[0] + n[0], step[1] + n[1], step[2] + 1)
+                        for n in helpers.NEIGHBORS_ORTH
+                    ]
             total += len(peaks)
     return total
 
@@ -42,11 +48,17 @@ def part_two(input_filename):
             steps = deque([(x + n[0], y + n[1], 1) for n in helpers.NEIGHBORS_ORTH])
             while steps:
                 step = steps.popleft()
-                if not helpers.out_of_bounds((step[0], step[1]), grid) and grid[step[1]][step[0]] == step[2]:
+                if (
+                    not helpers.out_of_bounds((step[0], step[1]), grid)
+                    and grid[step[1]][step[0]] == step[2]
+                ):
                     if step[2] == 9:
                         subtotal += 1
                         continue
-                    steps += ([(step[0] + n[0], step[1] + n[1], step[2] + 1) for n in helpers.NEIGHBORS_ORTH])
+                    steps += [
+                        (step[0] + n[0], step[1] + n[1], step[2] + 1)
+                        for n in helpers.NEIGHBORS_ORTH
+                    ]
             big_tot += subtotal
     return big_tot
 

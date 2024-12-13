@@ -18,6 +18,7 @@ def write_files(puzzle_input):
         file = not file
     return disk
 
+
 def total_up(disk):
     total = 0
     for idx, value in enumerate(disk):
@@ -26,6 +27,7 @@ def total_up(disk):
         else:
             total += idx * value
     return total
+
 
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
@@ -70,7 +72,9 @@ def part_two(input_filename):
                 l_pointer += 1
             else:  # empty space
                 empty_space += 1
-                empty_space_start = empty_space_start if empty_space_start else l_pointer
+                empty_space_start = (
+                    empty_space_start if empty_space_start else l_pointer
+                )
                 l_pointer += 1
             if empty_space == file_length:
                 """
@@ -86,7 +90,6 @@ def part_two(input_filename):
                 break
         current_file -= 1
     return total_up(disk)
-
 
 
 if __name__ == "__main__":

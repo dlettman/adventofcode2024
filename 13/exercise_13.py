@@ -30,7 +30,11 @@ def get_configs(puzzle_input, num_big=False):
         x, y = re.search(BUTTON_REGEX, lines[1]).groups()
         current_config.b = (int(x), int(y))
         x, y = re.search(PRIZE_REGEX, lines[2]).groups()
-        current_config.prize = (int(x), int(y)) if not num_big else (int(x) + 10000000000000, int(y) + 10000000000000)
+        current_config.prize = (
+            (int(x), int(y))
+            if not num_big
+            else (int(x) + 10000000000000, int(y) + 10000000000000)
+        )
         configs.append(current_config)
     return configs
 
@@ -60,7 +64,7 @@ def find_min_smartyman(config):
     p_x, p_y = config.prize
 
     solver = z3.Optimize()
-    a, b = z3.Int('a'), z3.Int('b')
+    a, b = z3.Int("a"), z3.Int("b")
     solver.add(a_x * a + b_x * b == p_x)
     solver.add(a_y * a + b_y * b == p_y)
     solver.minimize(a * 3 + b)
