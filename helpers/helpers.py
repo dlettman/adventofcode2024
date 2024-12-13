@@ -31,9 +31,11 @@ NEIGHBORS = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1
 NEIGHBORS_ORTH = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
 
-def parse_input(filename):
-    with open(filename) as file:
-        input_list = file.read().splitlines()
+def parse_input(filename, split=True):
+    with (open(filename) as file):
+        input_list = file.read()
+        if split:
+            input_list =  input_list.splitlines()
     return input_list
 
 
