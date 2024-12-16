@@ -84,18 +84,19 @@ def its_dijkstra_time_too(grid, start, exit):
             new_x, new_y = move.x + delta_x, move.y + delta_y
             if grid[(new_x, new_y)] == "#":
                 continue
-            if (not grid[new_x, new_y, (delta_x, delta_y)]) or (grid[new_x, new_y, (delta_x, delta_y)]) or  ((new_x, new_y) == exit):
-                new_dir = delta_x, delta_y
-                turns = get_num_of_turns(move.dir, new_dir)
-                new_space_score = move.score + 1 + 1000 * turns
-                grid[(new_x, new_y, (delta_x, delta_y))] = new_space_score
+            new_dir = delta_x, delta_y
+            turns = get_num_of_turns(move.dir, new_dir)
+            new_space_score = move.score + 1 + 1000 * turns
+            if (not grid[new_x, new_y, (delta_x, delta_y)]) or (grid[new_x, new_y, (delta_x, delta_y)] >= new_space_score) or ((new_x, new_y) == exit):
+                if (not grid[new_x, new_y, (delta_x, delta_y)]):
+                    grid[new_x, new_y, (delta_x, delta_y)] = new_space_score
                 if (new_x, new_y) == exit:
                     if not optimal_score:
                         optimal_score = new_space_score
                     for space in move.path:
                         optimal_path_spaces.add(space)
                 heapq.heappush(queue, Move(new_space_score, new_x, new_y, new_dir, move.path + [(new_x, new_y)]))
-    return len(optimal_path_spaces)
+    return len(optimal_path_spaces) + 1
 
 
 def part_one(input_filename):
