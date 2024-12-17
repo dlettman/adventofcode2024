@@ -8,6 +8,7 @@ import heapq
 from dataclasses import dataclass
 from collections import defaultdict
 
+
 @dataclass
 class Move:
     score: int
@@ -18,6 +19,7 @@ class Move:
 
     def __lt__(self, other):
         return self.score < other.score
+
 
 def get_grid(puzzle_input):
     grid = defaultdict(lambda: 0)
@@ -35,8 +37,11 @@ def get_grid(puzzle_input):
 
 
 DIRS = [(1, 0), (0, -1), (-1, 0), (0, 1)]
+
+
 def get_dir(idx):
     return DIRS[idx % len(DIRS)]
+
 
 def get_num_of_turns(start_dir, end_dir):
     if start_dir == end_dir:
@@ -51,8 +56,9 @@ def get_num_of_turns(start_dir, end_dir):
             return 1
     return 2
 
+
 def its_dijkstra_time(grid, start, exit):
-    queue = [Move(0, start[0], start[1], (1, 0), [start])] # score, x, y, dir_idx
+    queue = [Move(0, start[0], start[1], (1, 0), [start])]  # score, x, y, dir_idx
     # print(grid)
     while True:
         move = heapq.heappop(queue)
@@ -68,11 +74,20 @@ def its_dijkstra_time(grid, start, exit):
                 grid[(new_x, new_y, (delta_x, delta_y))] = new_space_score
                 if (new_x, new_y) == exit:
                     return new_space_score
-                heapq.heappush(queue, Move(new_space_score, new_x, new_y, new_dir, move.path + [(new_x, new_y)]))
+                heapq.heappush(
+                    queue,
+                    Move(
+                        new_space_score,
+                        new_x,
+                        new_y,
+                        new_dir,
+                        move.path + [(new_x, new_y)],
+                    ),
+                )
 
 
 def its_dijkstra_time_too(grid, start, exit):
-    queue = [Move(0, start[0], start[1], (1, 0), [start])] # score, x, y, dir_idx
+    queue = [Move(0, start[0], start[1], (1, 0), [start])]  # score, x, y, dir_idx
     # print(grid)
     optimal_path_spaces = set()
     optimal_score = 0
@@ -87,15 +102,28 @@ def its_dijkstra_time_too(grid, start, exit):
             new_dir = delta_x, delta_y
             turns = get_num_of_turns(move.dir, new_dir)
             new_space_score = move.score + 1 + 1000 * turns
-            if (not grid[new_x, new_y, (delta_x, delta_y)]) or (grid[new_x, new_y, (delta_x, delta_y)] >= new_space_score) or ((new_x, new_y) == exit):
-                if (not grid[new_x, new_y, (delta_x, delta_y)]):
+            if (
+                (not grid[new_x, new_y, (delta_x, delta_y)])
+                or (grid[new_x, new_y, (delta_x, delta_y)] >= new_space_score)
+                or ((new_x, new_y) == exit)
+            ):
+                if not grid[new_x, new_y, (delta_x, delta_y)]:
                     grid[new_x, new_y, (delta_x, delta_y)] = new_space_score
                 if (new_x, new_y) == exit:
                     if not optimal_score:
                         optimal_score = new_space_score
                     for space in move.path:
                         optimal_path_spaces.add(space)
-                heapq.heappush(queue, Move(new_space_score, new_x, new_y, new_dir, move.path + [(new_x, new_y)]))
+                heapq.heappush(
+                    queue,
+                    Move(
+                        new_space_score,
+                        new_x,
+                        new_y,
+                        new_dir,
+                        move.path + [(new_x, new_y)],
+                    ),
+                )
     return len(optimal_path_spaces) + 1
 
 
