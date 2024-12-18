@@ -8,6 +8,7 @@ from math import trunc
 
 import re
 
+
 class Compooper(object):
 
     def __init__(self, a, b, c, program):
@@ -78,7 +79,7 @@ class Compooper(object):
         # print(f"bdv {numerator} by {denominator} (2^combo) {combo} = (truncated) {trunc(quotient)}")
         self.pointer += 2
 
-    def cdv(self, combo):  # 6
+    def cdv(self, combo):  # 7
         numerator = self.a
         denominator = 2 ** (self.combo(combo))
         quotient = numerator / denominator
@@ -101,10 +102,12 @@ class Compooper(object):
 def get_program_and_registers(puzzle_input):
     registers, program = puzzle_input.split("\n\n")
     num_pattern = ".*: ([0-9]+)"
-    a, b, c = [int(re.search(num_pattern, register).groups()[0]) for register in registers.split("\n")]
+    a, b, c = [
+        int(re.search(num_pattern, register).groups()[0])
+        for register in registers.split("\n")
+    ]
     program = [int(item) for item in program.split(": ")[1].split(",")]
     return a, b, c, program
-
 
 
 def part_one(input_filename):
@@ -119,44 +122,65 @@ def part_one(input_filename):
 def part_two(input_filename):
     puzzle_input = helpers.parse_input(input_filename, split=False)
     a, b, c, program = get_program_and_registers(puzzle_input)
-    print(a, b, c, program)
+    # print(a, b, c, program)
 
     # n = 181441
     # 181441 = [0, 3, 2, 4, 5, 0] - very close!
 
-
-    for n in range (1000000, 10000000):
-        compooper = Compooper(n, b, c, program)
-        output = compooper.execute()
-        print(program)
-        output = [int(item) for item in output.split(",")]
-        print(n)
-        print(f"OUTPUT = {output}")
-        print(f"PROGRAM = {program}")
-        if output == program:
-            print("!!! DAMN !!!")
-            return n
-        elif len(output) < len(program):
-            print("TOO SHORT! NUMBER MORE BIG!")
-        elif len(output) > len(program):
-            print("TOO LONG! NUMBER MORE SMALL!")
-        else:
-            print("RIGHT BALLPARK!")
-
-    raise Exception("End of line, motherfucker")
+    # for n in range (1000000, 10000000):
+    n = int(
+        "".join(
+            [
+                "100",
+                "000",
+                "000",
+                "000",
+                "000",
+                "000",
+                "000",
+                "111",
+                "000",
+                "111",
+                "000",
+                "111",
+                "100",
+                "110",
+                "010",
+                "010",
+            ]
+        ),
+        2,
+    )
+    compooper = Compooper(n, b, c, program)
+    output = compooper.execute()
+    # print(program)
+    output = [int(item) for item in output.split(",")]
+    # print(n)
+    print(f"OUTPUT = {output}")
+    print(f"PROGRAM = {program}")
+    if output == program:
+        print("!!! DAMN !!!")
+        return n
+    elif len(output) < len(program):
+        print("TOO SHORT! NUMBER MORE BIG!")
+    elif len(output) > len(program):
+        print("TOO LONG! NUMBER MORE SMALL!")
+    else:
+        print("RIGHT BALLPARK!")
+    return
 
 
 if __name__ == "__main__":
-    print("*** PART ONE ***\n")
-    print(f"Test result = {part_one('inputtest.txt')}\n")
-    onestart = time.time()
-    p1result = part_one("input.txt")
-    oneend = time.time()
-    print(f"REAL RESULT = {p1result}")
-    print(f"Time = {oneend - onestart}")
-    print("\n")
+    # print("*** PART ONE ***\n")
+    # print(f"Test result = {part_one('inputtest.txt')}\n")
+    # onestart = time.time()
+    # p1result = part_one("input.txt")
+    # oneend = time.time()
+    # print(f"REAL RESULT = {p1result}")
+    # print(f"Time = {oneend - onestart}")
+    # print("\n")
     print("*** PART TWO ***\n")
-    print(f"Test result = {part_two('inputtest.txt')}\n")
+    # print(f"Test result = {part_two('inputtest.txt')}\n")
     twostart = time.time()
     p2result = part_two("input.txt")
     twoend = time.time()
