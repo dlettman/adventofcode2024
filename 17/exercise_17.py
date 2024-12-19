@@ -128,46 +128,61 @@ def part_two(input_filename):
     # 181441 = [0, 3, 2, 4, 5, 0] - very close!
 
     # for n in range (1000000, 10000000):
-    n = int(
-        "".join(
-            [
-                "100",
-                "000",
-                "000",
-                "000",
-                "000",
-                "000",
-                "000",
-                "111",
-                "000",
-                "111",
-                "000",
-                "111",
-                "100",
-                "110",
-                "010",
-                "010",
-            ]
-        ),
-        2,
-    )
-    compooper = Compooper(n, b, c, program)
-    output = compooper.execute()
-    # print(program)
-    output = [int(item) for item in output.split(",")]
-    # print(n)
-    print(f"OUTPUT = {output}")
-    print(f"PROGRAM = {program}")
-    if output == program:
-        print("!!! DAMN !!!")
-        return n
-    elif len(output) < len(program):
-        print("TOO SHORT! NUMBER MORE BIG!")
-    elif len(output) > len(program):
-        print("TOO LONG! NUMBER MORE SMALL!")
-    else:
-        print("RIGHT BALLPARK!")
-    return
+    # possibilities = ["0", "1", "2", "3", "4", "5", "6", "7"]
+    # for spot in range(15):
+    #     new_possibilities = []
+    #     for possibility in possibilities:
+    #         for digit in "01234567":
+    #             new_possibilities.append(possibility + digit)
+    #     possibilities = new_possibilities
+    #     print(new_possibilities)
+    # n = int(
+    #     "".join(
+    #         [
+    #             "4"
+    #             "5",
+    #             "2",
+    #             "6",
+    #             "4",
+    #             "4",
+    #             "6",
+    #             "0",
+    #             "7",
+    #             "3",
+    #             "2",
+    #             "6",
+    #             "7",
+    #             "6",
+    #             "7",
+    #             "5",
+    #         ]
+    #     ),
+    #     8,
+    # )
+    # n = 512
+    # for n in possibilities:
+    # n = 164279024971709
+    for n in range(164279024971452, 20534878121463, -1):
+        print(n)
+        compooper = Compooper(n, b, c, program)
+        output = compooper.execute()
+        # print(program)
+        output = [int(item) for item in output.split(",")]
+        # print(n)
+        print(f"OUTPUT = {output[::-1]}")
+        print(f"PROGRAM = {program[::-1]}")
+        # print(f"OUTPUT = {' '.join(['{0:b}'.format(int(item)) for item in output])}")
+        # print(f"PROGRAM = {' '.join(['{0:b}'.format(int(item)) for item in program])}")
+        if output == program:
+            print("!!! DAMN !!!")
+            return n
+        elif len(output) < len(program):
+            print("TOO SHORT! NUMBER MORE BIG!")
+        elif len(output) > len(program):
+            print("TOO LONG! NUMBER MORE SMALL!")
+        else:
+            print("RIGHT BALLPARK!")
+        # return
 
 
 if __name__ == "__main__":
@@ -186,7 +201,7 @@ if __name__ == "__main__":
     twoend = time.time()
     print(f"REAL RESULT = {p2result}")
     print(f"Time = {twoend - twostart}")
-    if p1result:
-        pyperclip.copy(p1result)
-    elif p2result:
-        pyperclip.copy(p2result)
+    # if p1result:
+    #     pyperclip.copy(p1result)
+    # elif p2result:
+    #     pyperclip.copy(p2result)
