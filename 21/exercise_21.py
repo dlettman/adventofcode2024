@@ -55,79 +55,80 @@ class Robot(object):
         elif self.robo_type == "d":
             return DIRECTION_PAD[self.pos[1]][self.pos[0]]
 
-    def generate_moves_and_reposition(self, goal_symbol, non, output_moves=None):
-        if self.robo_type == "n":
-            moves, num_moves = get_next_button_presses_numeric(
-                self.symbol, goal_symbol, non=non
-            )
-        else:
-            moves, num_moves = get_next_button_presses_direction(
-                self.symbol, goal_symbol, num=False, non=non
-            )
-        if self.next_bot:
-            for move in moves:
-                if self.next_bot:
-                    self.next_bot.generate_moves_and_reposition(
-                        move, non, output_moves=output_moves
-                    )
-                    if self.robo_type == "n":
-                        self.pos = get_coord_of_symbol(goal_symbol, NUMERIC_PAD)
-                    else:
-                        self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
-        else:
-            output_moves += moves
-            self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
-        return
+    # def generate_moves_and_reposition(self, goal_symbol, non, output_moves=None):
+    #     if self.robo_type == "n":
+    #         moves, num_moves = get_next_button_presses_numeric(
+    #             self.symbol, goal_symbol, non=non
+    #         )
+    #     else:
+    #         moves, num_moves = get_next_button_presses_direction(
+    #             self.symbol, goal_symbol, num=False, non=non
+    #         )
+    #     if self.next_bot:
+    #         for move in moves:
+    #             if self.next_bot:
+    #                 self.next_bot.generate_moves_and_reposition(
+    #                     move, non, output_moves=output_moves
+    #                 )
+    #                 if self.robo_type == "n":
+    #                     self.pos = get_coord_of_symbol(goal_symbol, NUMERIC_PAD)
+    #                 else:
+    #                     self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
+    #     else:
+    #         output_moves += moves
+    #         self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
+    #     return
+    #
+    # @cache
+    # def generate_moves_and_reposition_too(self, goal_symbol, non, output_moves=None):
+    #     if self.robo_type == "n":
+    #         moves, num_moves = get_next_button_presses_numeric(
+    #             self.symbol, goal_symbol, non=non
+    #         )
+    #     else:
+    #         moves, num_moves = get_next_button_presses_direction(
+    #             self.symbol, goal_symbol
+    #         )
+    #     if self.next_bot:
+    #         for move in moves:
+    #             output_moves = self.next_bot.generate_moves_and_reposition_too(
+    #                 move, non, output_moves=output_moves
+    #             )
+    #         if self.robo_type == "n":
+    #             self.pos = get_coord_of_symbol(goal_symbol, NUMERIC_PAD)
+    #         else:
+    #             self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
+    #     else:
+    #         output_moves += num_moves
+    #         self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
+    #     return output_moves
 
-    @cache
-    def generate_moves_and_reposition_too(self, goal_symbol, non, output_moves=None):
-        if self.robo_type == "n":
-            moves, num_moves = get_next_button_presses_numeric(
-                self.symbol, goal_symbol, non=non
-            )
-        else:
-            moves, num_moves = get_next_button_presses_direction(
-                self.symbol, goal_symbol, num=False, non=non
-            )
-        if self.next_bot:
-            for move in moves:
-                output_moves = self.next_bot.generate_moves_and_reposition_too(
-                    move, non, output_moves=output_moves
-                )
-            if self.robo_type == "n":
-                self.pos = get_coord_of_symbol(goal_symbol, NUMERIC_PAD)
-            else:
-                self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
-        else:
-            output_moves += num_moves
-            self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
-        return output_moves
 
-
-@cache
-def generate_moves_and_reposition_too(
-    bot_type, bot, self, goal_symbol, non, output_moves=None
+# @cache
+def generate_moves(
+    bot, goal_symbol, non, output_moves=None
 ):
-    if self.robo_type == "n":
+    if bot.robo_type == "n":
         moves, num_moves = get_next_button_presses_numeric(
-            self.symbol, goal_symbol, non=non
+            bot.symbol, goal_symbol, non=non
         )
     else:
         moves, num_moves = get_next_button_presses_direction(
-            self.symbol, goal_symbol, num=False, non=non
+            bot.symbol, goal_symbol
         )
-    if self.next_bot:
+    if bot.next_bot:
         for move in moves:
-            output_moves = self.next_bot.generate_moves_and_reposition_too(
-                move, non, output_moves=output_moves
+            output_moves = generate_moves(
+                bot.next_bot, move, non, output_moves=output_moves
             )
-        if self.robo_type == "n":
-            self.pos = get_coord_of_symbol(goal_symbol, NUMERIC_PAD)
+        if bot.robo_type == "n":
+            bot.pos = get_coord_of_symbol(goal_symbol, NUMERIC_PAD)
         else:
-            self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
+            bot.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
     else:
+        # print(moves)
         output_moves += num_moves
-        self.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
+        bot.pos = get_coord_of_symbol(goal_symbol, DIRECTION_PAD)
     return output_moves
 
 
@@ -169,10 +170,8 @@ def get_next_button_presses_numeric(
         return ("A"), 1
     start = get_coord_of_symbol(current, NUMERIC_PAD)
     path = find_path_to_symbol(start, goal_symbol, NUMERIC_PAD, num=True, non=non)
-    return (
-        (COORDS_TO_DIRECTIONS[coord] for coord in path + [0]),
-        len([COORDS_TO_DIRECTIONS[coord] for coord in path]) + 1,
-    )
+    directions = tuple([COORDS_TO_DIRECTIONS[coord] for coord in path] + ["A"])
+    return directions, len(directions)
 
     # for coord in path:
     #     yield COORDS_TO_DIRECTIONS[coord]
@@ -185,10 +184,8 @@ def get_next_button_presses_direction(current, goal_symbol) -> tuple[tuple[str],
         return ("A"), 1
     start = get_coord_of_symbol(current, DIRECTION_PAD)
     path = find_path_to_symbol(start, goal_symbol, DIRECTION_PAD, num=False)
-    return (
-        (COORDS_TO_DIRECTIONS[coord] for coord in path + [0]),
-        len([COORDS_TO_DIRECTIONS[coord] for coord in path]) + 1,
-    )
+    directions = tuple([COORDS_TO_DIRECTIONS[coord] for coord in path] + ["A"])
+    return directions, len(directions)
 
     # for coord in path:
     #     yield COORDS_TO_DIRECTIONS[coord]
@@ -275,7 +272,7 @@ def part_one(input_filename):
 def part_two(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     direction_bots = [Robot("n")]
-    direction_bots += [Robot("d") for _ in range(2)]
+    direction_bots += [Robot("d") for _ in range(25)]
     for idx, bot in enumerate(direction_bots):
         try:
             bot.next_bot = direction_bots[idx + 1]
@@ -288,18 +285,16 @@ def part_two(input_filename):
             human_presses = 0
             for char in code:
                 output_moves = 0
-                output_moves = direction_bots[0].generate_moves_and_reposition_too(
-                    char, non=non, output_moves=output_moves
-                )
+                output_moves = generate_moves(direction_bots[0], char, non=non, output_moves=output_moves)
                 human_presses += output_moves
             if not complexity:
                 complexity = get_complexity_too(human_presses, code)
             else:
                 new_complexity = get_complexity_too(human_presses, code)
-                print("oc = ", complexity, ", nc = ", new_complexity)
+                # print("oc = ", complexity, ", nc = ", new_complexity)
                 complexity = min(complexity, get_complexity_too(human_presses, code))
 
-        print(complexity)
+        # print(complexity)
         print(human_presses)
         total += complexity
     return total
@@ -317,12 +312,12 @@ if __name__ == "__main__":
     # print(f"Time = {oneend - onestart}")
     # print("\n")
     print("*** PART TWO ***\n")
-    # print(f"Test result = {part_two('inputtest.txt')}\n")
-    twostart = time.time()
-    p2result = part_two("input.txt")
-    twoend = time.time()
-    print(f"REAL RESULT = {p2result}")
-    print(f"Time = {twoend - twostart}")
+    print(f"Test result = {part_two('inputtest.txt')}\n")
+    # twostart = time.time()
+    # p2result = part_two("input.txt")
+    # twoend = time.time()
+    # print(f"REAL RESULT = {p2result}")
+    # print(f"Time = {twoend - twostart}")
     # if p1result:
     #     pyperclip.copy(p1result)
     # elif p2result:
