@@ -22,25 +22,31 @@ def make_connections(puzzle_input):
             connections[a].add(b)
     return connections
 
+
 def make_triplets(connections):
     triplets = set()
     for origin, dests in connections.items():
         for dest in dests:
             if dest in connections:
                 for dest_dest in connections[dest]:
-                    if (dest_dest in connections and origin in connections[dest_dest]) or (dest_dest in connections[origin]):
+                    if (
+                        dest_dest in connections and origin in connections[dest_dest]
+                    ) or (dest_dest in connections[origin]):
                         triplets.add(tuple(sorted([origin, dest, dest_dest])))
     return triplets
+
 
 def part_one(input_filename):
     puzzle_input = helpers.parse_input(input_filename)
     connections = make_connections(puzzle_input)
     triplets = make_triplets(connections)
-    return (sum([1 for item in triplets if one_starts_with_t(item)]))
+    return sum([1 for item in triplets if one_starts_with_t(item)])
 
 
 def is_connected(a, b, connections):
-    return (a in connections and b in connections[a]) or (b in connections and a in connections[b])
+    return (a in connections and b in connections[a]) or (
+        b in connections and a in connections[b]
+    )
 
 
 def part_two(input_filename):
@@ -63,13 +69,19 @@ def part_two(input_filename):
                         for other_sg_member in working_supergroup:
                             if other_sg_member == member:
                                 continue
-                            if not is_connected(potential_member, other_sg_member, connections):
+                            if not is_connected(
+                                potential_member, other_sg_member, connections
+                            ):
                                 new_connection = False
                                 break
-                            elif is_connected(potential_member, other_sg_member, connections):
+                            elif is_connected(
+                                potential_member, other_sg_member, connections
+                            ):
                                 new_connection = True
                         if new_connection:
-                            new_super_group = tuple(list(super_group) + [potential_member])
+                            new_super_group = tuple(
+                                list(super_group) + [potential_member]
+                            )
                             new_super_groups.add(tuple(sorted(new_super_group)))
                             added_a_new_one = True
                             break
